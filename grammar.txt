@@ -1,0 +1,67 @@
+expression = logical_or
+
+logical_or = logical_or || logical_and
+           | logical_and
+
+logical_and = logical_and && relational_all
+            | relational_all
+
+relational_all = relational_all == relational_num
+               | relational_all != relational_num
+               | relational_num
+
+relational_num = relational_num < bitwise_or
+               | relational_num <= bitwise_or
+               | relational_num > bitwise_or
+               | relational_num >= bitwise_or
+               | bitwise_or
+
+bitwise_or = bitwise_or | bitwise_and
+           | bitwise_or ^ bitwise_and
+           | bitwise_and
+
+bitwise_and = bitwise_and & bitwise_shift
+            | bitwise_shift
+
+bitwise_shift = bitwise_shift << additive
+              | bitwise_shift >> additive
+              | additive
+
+additive = additive + multiplicative
+         | additive - multiplicative
+         | multiplicative
+
+multiplicative = multiplicative * expo
+               | multiplicative / expo
+               | multiplicative % expo
+               | expo
+
+expo = unary ** expo
+     | unary
+
+unary = !unary
+      | ~unary
+      | {i}unary
+      | {f}unary
+      | cell_ref
+
+cell_ref = #[atom, atom]
+         | func([atom, atom], [atom, atom])
+         | atom
+
+func = SUM
+     | MIN
+     | MAX
+     | MEAN
+
+atom = INT
+     | FLOAT
+     | BOOL
+     | VAR
+     | VAR = expression
+     | (expression)
+     | block
+     | IF expression THEN block ELSE block END
+     | FOR VAR IN([atom, atom], [atom, atom]) block END
+
+block = :expression;expression;...:
